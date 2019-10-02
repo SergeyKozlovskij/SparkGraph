@@ -5,6 +5,12 @@ public class State {
     private String name;
     private String abbrev;
 
+    public State(Long id, String name, String abbrev) {
+        this.id = id;
+        this.name = name;
+        this.abbrev = abbrev;
+    }
+
     public Long getId() {
         return id;
     }

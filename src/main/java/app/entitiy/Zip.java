@@ -5,6 +5,12 @@ public class Zip {
     private String code;
     private State state;
 
+    public Zip(Long id, String code, State state) {
+        this.id = id;
+        this.code = code;
+        this.state = state;
+    }
+
     public Long getId() {
         return id;
     }
