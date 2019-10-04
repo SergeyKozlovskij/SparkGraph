@@ -8,6 +8,9 @@ public class Rep {
     private List<Zip> zipCodes;
     private List<State> states;
 
+    public Rep() {
+    }
+
     public Rep(Long id, String name, List<Zip> zipCodes, List<State> states) {
         this.id = id;
         this.name = name;

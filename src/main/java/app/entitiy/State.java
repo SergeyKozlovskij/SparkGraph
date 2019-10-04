@@ -5,6 +5,9 @@ public class State {
     private String name;
     private String abbrev;
 
+    public State() {
+    }
+
     public State(Long id, String name, String abbrev) {
         this.id = id;
         this.name = name;

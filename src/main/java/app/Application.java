@@ -3,11 +3,17 @@ package app;
 import static spark.Spark.get;
 import static spark.Spark.path;
 import static spark.Spark.port;
+import static spark.Spark.post;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 import app.entitiy.Rep;
@@ -22,12 +28,14 @@ public class Application {
     public static void main(String[] args) {
         initializeDb();
         Gson gson = new Gson();
+        ObjectMapper mapper = new ObjectMapper();
         port(4567);
         get("/", (request, response) -> "Go away");
         path("/api", () -> {
             path("/reps", () -> {
                 get("", (request, response) -> reps, gson::toJson);
                 get("/:id", (request, response) -> repById(request.params("id")), gson::toJson);
+                post("", (request, response) -> saveRep(mapper.readValue(request.body(), Rep.class)), gson::toJson);
             });
             path("/states", () -> {
                 get("", (request, response) -> states, gson::toJson);
@@ -67,9 +75,15 @@ public class Application {
         return null;
     }
 
+    private static Rep saveRep (Rep rep) {
+        rep.setId(reps.stream().map(Rep::getId).max(Comparator.naturalOrder()).orElse(0L) + 1);
+        reps.add(rep);
+        return rep;
+    }
+
     private static void initializeDb() {
-        states = ImmutableList.of(new State(1L, "Texas", "TX"));
-        zips = ImmutableList.of(new Zip(1L, "12345", states.get(0)));
-        reps = ImmutableList.of(new Rep(1L, "Rep1", zips, states));
+        states = Lists.newArrayList(new State(1L, "Texas", "TX"));
+        zips = Lists.newArrayList(new Zip(1L, "12345", states.get(0)));
+        reps = Lists.newArrayList(new Rep(1L, "Rep1", zips, states));
     }
 }
